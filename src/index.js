@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 const port = 3000;
@@ -19,6 +20,8 @@ mongoose.connection.on("error", (err) => {
 });
 
 // Server stuff
+app.use(authRoutes);
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
