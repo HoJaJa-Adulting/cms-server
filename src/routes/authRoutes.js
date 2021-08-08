@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = mongoose.model("User");
+const requireAuth = require("../middlewares/requireAuth");
 
 const router = express.Router();
 
@@ -12,8 +13,8 @@ router.post("/signup", async (req, res) => {
     const user = new User({ email, password });
     await user.save();
 
-    const token = jwt.sign({ userId: user._id }, "MY_SECRET_KEY"); // Change secret key
-    res.send({ token });
+    const token = await user.generateAuthToken();
+    res.send({ user, token });
   } catch (error) {
     return res.status(422).send(error.message);
   }
@@ -34,10 +35,23 @@ router.post("/signin", async (req, res) => {
 
   try {
     await user.comparePassword(password);
-    const token = jwt.sign({ userId: user._id }, "MY_SECRET_KEY"); // Change secret key
-    res.send({ token });
+    const token = await user.generateAuthToken();
+    res.send({ user, token });
   } catch (error) {
     return res.status(422).send({ error: "Invalid password or email" });
+  }
+});
+
+router.post("/signout", requireAuth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.token;
+    });
+
+    await req.user.save();
+    res.send();
+  } catch (error) {
+    res.status(500).send();
   }
 });
 
