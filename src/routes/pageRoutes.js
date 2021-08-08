@@ -5,6 +5,15 @@ const requireAuth = require("../middlewares/requireAuth");
 
 const router = express.Router();
 
+router.get("/page", async (req, res) => {
+  try {
+    const pages = await Page.find({});
+    res.send(pages);
+  } catch (error) {
+    return res.status(404).send(error.message);
+  }
+});
+
 router.post("/page", requireAuth, async (req, res) => {
   const { name, content } = req.body;
 
@@ -14,7 +23,19 @@ router.post("/page", requireAuth, async (req, res) => {
 
     res.send(page);
   } catch (error) {
+    console.log(error);
     return res.status(422).send(error.message);
+  }
+});
+
+router.get("/page/:name/edit", requireAuth, async (req, res) => {
+  const { name } = req.params;
+  try {
+    const page = await Page.findOne({ name });
+
+    res.send(page);
+  } catch (error) {
+    return res.status(404).send(error.message);
   }
 });
 
