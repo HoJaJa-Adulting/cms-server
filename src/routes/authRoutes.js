@@ -6,6 +6,20 @@ const requireAuth = require("../middlewares/requireAuth");
 
 const router = express.Router();
 
+router.get("/user", requireAuth, async (req, res) => {
+  const { email, password } = req.user;
+
+  if (!email || !password) {
+    return res.status(422).send({ error: "User not logged in" });
+  }
+
+  try {
+    res.send({ email });
+  } catch (error) {
+    return res.status(422).send({ error: "User not logged in" });
+  }
+});
+
 router.post("/signup", async (req, res) => {
   const { email, password } = req.body;
 
