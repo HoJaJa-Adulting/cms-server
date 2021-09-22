@@ -1,11 +1,13 @@
 require("./models/User");
 require("./models/Page");
+require("./models/Suggestion");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes");
 const pageRoutes = require("./routes/pageRoutes");
+const suggestionRoutes = require("./routes/suggestionRoutes");
 const requireAuth = require("./middlewares/requireAuth");
 
 const app = express();
@@ -24,6 +26,8 @@ mongoose.connection.on("connected", () => {
 mongoose.connection.on("error", (err) => {
   console.error("Error connecting to mongo", err);
 });
+mongoose.set("useFindAndModify", false);
+mongoose.set("runValidators", true);
 
 const allowCrossDomain = function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -39,6 +43,7 @@ app.use(cors());
 app.use(allowCrossDomain);
 app.use(authRoutes);
 app.use(pageRoutes);
+app.use(suggestionRoutes);
 
 app.get("/", requireAuth, (req, res) => {
   res.send(`Your email: ${req.user.email}`);
