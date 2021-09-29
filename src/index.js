@@ -12,7 +12,7 @@ const suggestionRoutes = require("./routes/suggestionRoutes");
 const requireAuth = require("./middlewares/requireAuth");
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 const USER = process.env.MONGO_USER;
 const PASSWORD = process.env.MONGO_PASSWORD;
