@@ -1,3 +1,4 @@
+require("dotenv").config();
 require("./models/User");
 require("./models/Page");
 require("./models/Suggestion");
@@ -13,8 +14,11 @@ const requireAuth = require("./middlewares/requireAuth");
 const app = express();
 const port = 3001;
 
+const USER = process.env.MONGO_USER;
+const PASSWORD = process.env.MONGO_PASSWORD;
+
 // Database stuff
-const mongoUri = ""; // Add connection string here, between the quotes
+const mongoUri = `mongodb+srv://${USER}:${PASSWORD}@dev-cms-db.ovamu.mongodb.net/dev-db?retryWrites=true&w=majority`; // Add connection string here, between the quotes
 mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useCreateIndex: true,
