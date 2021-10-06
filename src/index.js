@@ -1,15 +1,17 @@
-require("dotenv").config();
-require("./models/User");
-require("./models/Page");
-require("./models/Suggestion");
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const authRoutes = require("./routes/authRoutes");
-const pageRoutes = require("./routes/pageRoutes");
-const suggestionRoutes = require("./routes/suggestionRoutes");
-const requireAuth = require("./middlewares/requireAuth");
+import dotenv from "dotenv";
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import bodyParser from "body-parser";
+import "./models/Page.js";
+import "./models/Suggestion.js";
+import "./models/User.js";
+import authRoutes from "./routes/authRoutes.js";
+import pageRoutes from "./routes/pageRoutes.js";
+import suggestionRoutes from "./routes/suggestionRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -48,9 +50,10 @@ app.use(allowCrossDomain);
 app.use(authRoutes);
 app.use(pageRoutes);
 app.use(suggestionRoutes);
+app.use(userRoutes);
 
-app.get("/", requireAuth, (req, res) => {
-  res.send(`Your email: ${req.user.email}`);
+app.get("/", (req, res) => {
+  res.send("Home");
 });
 
 app.listen(port, () => {

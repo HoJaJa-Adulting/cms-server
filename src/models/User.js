@@ -1,8 +1,17 @@
-const mongoose = require("mongoose");
-const bcypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { ROLE } from "../resources/constants";
 
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+  },
+  role: {
+    type: String,
+    enum: Object.values(ROLE),
+    required: true,
+  },
   email: {
     type: String,
     unique: true,
@@ -28,12 +37,12 @@ userSchema.pre("save", function (next) {
     return next();
   }
 
-  bcypt.genSalt(10, (err, salt) => {
+  bcrypt.genSalt(10, (err, salt) => {
     if (err) {
       return next(err);
     }
 
-    bcypt.hash(user.password, salt, (err, hash) => {
+    bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) {
         return next(err);
       }
@@ -57,7 +66,7 @@ userSchema.methods.generateAuthToken = async function () {
 userSchema.methods.comparePassword = function (possiblePassword) {
   const user = this;
   return new Promise((resolve, reject) => {
-    bcypt.compare(possiblePassword, user.password, (err, isMatch) => {
+    bcrypt.compare(possiblePassword, user.password, (err, isMatch) => {
       if (err) {
         return reject(err);
       }
@@ -81,4 +90,4 @@ userSchema.methods.toJSON = function () {
   return userObject;
 };
 
-mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);

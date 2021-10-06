@@ -1,8 +1,8 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const Page = mongoose.model("Page");
-const requireAuth = require("../middlewares/requireAuth");
+import mongoose from "mongoose";
+import express from "express";
+import { requireAuth, requireAdminAuth } from "../middlewares/basicAuth.js";
 
+const Page = mongoose.model("Page");
 const router = express.Router();
 
 router.get("/page", async (req, res) => {
@@ -14,7 +14,7 @@ router.get("/page", async (req, res) => {
   }
 });
 
-router.post("/page", requireAuth, async (req, res) => {
+router.post("/page", requireAuth, requireAdminAuth, async (req, res) => {
   const { name, content } = req.body;
 
   try {
@@ -23,7 +23,6 @@ router.post("/page", requireAuth, async (req, res) => {
 
     res.send(page);
   } catch (error) {
-    console.log(error);
     return res.status(422).send(error.message);
   }
 });
@@ -51,17 +50,17 @@ router.get("/page/:name", async (req, res) => {
   }
 });
 
-router.put("/page/:name", requireAuth, async (req, res) => {
+router.put("/page/:name", requireAuth, requireAdminAuth, async (req, res) => {
   const { name } = req.params;
   const updates = req.body;
+
   try {
     await Page.updateOne({ name }, updates);
 
     res.send({ success: "Update Successful" });
   } catch (error) {
-    console.log(error);
     return res.status(400).send(error.message);
   }
 });
 
-module.exports = router;
+export default router;

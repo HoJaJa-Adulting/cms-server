@@ -1,30 +1,15 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const User = mongoose.model("User");
-const requireAuth = require("../middlewares/requireAuth");
+import mongoose from "mongoose";
+import express from "express";
+import { requireAuth } from "../middlewares/basicAuth.js";
 
+const User = mongoose.model("User");
 const router = express.Router();
 
-router.get("/user", requireAuth, async (req, res) => {
-  const { email, password } = req.user;
-
-  if (!email || !password) {
-    return res.status(422).send({ error: "User not logged in" });
-  }
-
-  try {
-    res.send({ email });
-  } catch (error) {
-    return res.status(422).send({ error: "User not logged in" });
-  }
-});
-
 router.post("/signup", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name, role } = req.body;
 
   try {
-    const user = new User({ email, password });
+    const user = new User({ email, password, name, role });
     await user.save();
 
     const token = await user.generateAuthToken();
@@ -69,4 +54,4 @@ router.post("/signout", requireAuth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

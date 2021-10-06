@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const suggestionSchema = new mongoose.Schema({
   page: { type: mongoose.Schema.Types.ObjectId, ref: "Page", required: true },
@@ -16,4 +16,4 @@ const suggestionSchema = new mongoose.Schema({
   },
 });
 
-mongoose.model("Suggestion", suggestionSchema);
+export default mongoose.model("Suggestion", suggestionSchema);

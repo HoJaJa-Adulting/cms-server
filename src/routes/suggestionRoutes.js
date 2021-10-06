@@ -1,8 +1,8 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const Suggestion = mongoose.model("Suggestion");
-const requireAuth = require("../middlewares/requireAuth");
+import mongoose from "mongoose";
+import express from "express";
+import { requireAuth } from "../middlewares/basicAuth.js";
 
+const Suggestion = mongoose.model("Suggestion");
 const router = express.Router();
 
 router.get("/suggestion", requireAuth, async (req, res) => {
@@ -40,7 +40,6 @@ router.post("/suggestion", requireAuth, async (req, res) => {
 
     res.send(newSuggestion);
   } catch (error) {
-    console.log(error);
     return res.status(422).send(error.message);
   }
 });
@@ -61,9 +60,8 @@ router.put("/suggestion/:id", requireAuth, async (req, res) => {
 
     res.send({ success: "Update Successful" });
   } catch (error) {
-    console.log(error);
     return res.status(422).send(error.message);
   }
 });
 
-module.exports = router;
+export default router;
