@@ -40,7 +40,8 @@ const allowedOrigins = [
   "https://hojaja-cms-client.herokuapp.com/",
 ];
 const allowCrossDomain = function (req, res, next) {
-  let origin = req.headers.origin;
+  const origin = req.headers.referer;
+  console.log("req.headers", req.headers);
   if (allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin); // restrict it to the required domain
   }
