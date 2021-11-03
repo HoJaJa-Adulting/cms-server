@@ -35,8 +35,15 @@ mongoose.connection.on("error", (err) => {
 mongoose.set("useFindAndModify", false);
 mongoose.set("runValidators", true);
 
+const allowedOrigins = [
+  "http://localhost:3002/",
+  "https://hojaja-cms-client.herokuapp.com/",
+];
 const allowCrossDomain = function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  let origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin); // restrict it to the required domain
+  }
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
   next();
