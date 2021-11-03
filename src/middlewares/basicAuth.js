@@ -51,7 +51,7 @@ export const canUpdateRole = (req, res, next) => {
   if (body.role && user.role !== ROLE.ADMIN) {
     return res
       .status(403)
-      .send({ error: "Only an admin user can update roll" });
+      .send({ error: "Only an admin user can update role" });
   }
   next();
 };
