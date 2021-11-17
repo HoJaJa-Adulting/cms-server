@@ -6,6 +6,9 @@ const pageSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  lastUpdated: {
+    type: Date,
+  },
   content: [{}],
 });
 
