@@ -31,6 +31,12 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+userSchema.virtual("suggestions", {
+  ref: "Suggestion",
+  localField: "_id",
+  foreignField: "creator",
+});
+
 userSchema.pre("save", function (next) {
   const user = this;
   if (!user.isModified("password")) {

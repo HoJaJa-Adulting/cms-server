@@ -22,7 +22,16 @@ router.get("/user", requireAuth, requireAdminAuth, async (req, res) => {
 router.get("/user/:id", requireAuth, async (req, res) => {
   try {
     if (req.user._id == req.params.id) {
-      return res.send({ user: req.user });
+      const populatedUser = await req.user
+        .populate("suggestions")
+        .execPopulate();
+
+      delete populatedUser._doc.password;
+      delete populatedUser._doc.tokens;
+
+      return res.send({
+        user: { ...populatedUser._doc, suggestions: populatedUser.suggestions },
+      });
     }
 
     throw new Error("Not authorized to view this user");
